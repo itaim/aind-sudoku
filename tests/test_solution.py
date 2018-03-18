@@ -5,7 +5,124 @@ own additional test cases to cover any failed tests shown in the Project Assista
 """
 import unittest
 import solution
+import function
+from utils import display
 
+
+def generate_empty_board():
+    values = {}
+    for b in solution.boxes:
+        values[b] = '123456789'
+    return values
+
+
+class TestGridValues(unittest.TestCase):
+    input1 = '..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3..'
+    expected1 = {'A1': '.', 'A2': '.', 'A3': '3', 'A4': '.', 'A5': '2', 'A6': '.', 'A7': '6', 'A8': '.', 'A9': '.', 'B1': '9', 'B2': '.', 'B3': '.', 'B4': '3', 'B5': '.', 'B6': '5', 'B7': '.', 'B8': '.', 'B9': '1', 'C1': '.', 'C2': '.', 'C3': '1', 'C4': '8', 'C5': '.', 'C6': '6', 'C7': '4', 'C8': '.', 'C9': '.', 'D1': '.', 'D2': '.', 'D3': '8', 'D4': '1', 'D5': '.', 'D6': '2', 'D7': '9', 'D8': '.', 'D9': '.', 'E1': '7', 'E2': '.', 'E3': '.', 'E4': '.', 'E5': '.', 'E6': '.', 'E7': '.', 'E8': '.', 'E9': '8', 'F1': '.', 'F2': '.', 'F3': '6', 'F4': '7', 'F5': '.', 'F6': '8', 'F7': '2', 'F8': '.', 'F9': '.', 'G1': '.', 'G2': '.', 'G3': '2', 'G4': '6', 'G5': '.', 'G6': '9', 'G7': '5', 'G8': '.', 'G9': '.', 'H1': '8', 'H2': '.', 'H3': '.', 'H4': '2', 'H5': '.', 'H6': '3', 'H7': '.', 'H8': '.', 'H9': '9', 'I1': '.', 'I2': '.', 'I3': '5', 'I4': '.', 'I5': '1', 'I6': '.', 'I7': '3', 'I8': '.', 'I9': '.'}
+
+    def test_grid_values1(self):
+        actual  = function.grid_values(self.input1)
+        display(actual)
+        self.assertEqual(actual, self.expected1)
+
+
+class TestEliminate(unittest.TestCase):
+
+    def test_eliminate1(self):
+        before = generate_empty_board()
+        before['A1'] = '4'
+        expected = generate_empty_board()
+        expected['A1'] = '4'
+        for b in solution.peers.get('A1'):
+            expected[b] = '12356789'
+        display(before)
+        display(expected)
+        actual = solution.eliminate(before)
+        self.assertEqual(actual,expected)
+
+class TestOnlyChoice(unittest.TestCase):
+
+    only_choice_input1 = {'I4': '4', 'H1': '8', 'F2': '13459', 'H4': '2', 'E3': '49', 'D4': '1', 'G6': '9', 'F3': '6',
+                          'C9': '2357', 'F8': '1345', 'C7': '4', 'C8': '23579', 'H9': '9', 'E7': '1', 'G8': '1478',
+                          'B4': '3', 'D9': '34567', 'G2': '1347', 'H5': '457', 'C1': '25', 'G7': '5', 'D8': '34567',
+                          'A7': '6', 'D7': '9', 'B5': '47', 'G9': '47', 'C6': '6', 'A9': '57', 'B8': '278', 'F4': '7',
+                          'I5': '1', 'B2': '24678', 'H7': '17', 'A2': '4578', 'H3': '47', 'F5': '3459', 'B3': '47',
+                          'B1': '9', 'H2': '1467', 'E8': '13456', 'B7': '78', 'I3': '5', 'A3': '3', 'I6': '47',
+                          'A1': '45', 'F6': '8', 'G3': '2', 'F1': '1345', 'G4': '6', 'I7': '3', 'A4': '49', 'C5': '79',
+                          'H8': '1467', 'I2': '4679', 'E9': '8', 'C2': '257', 'E5': '34569', 'I8': '24678', 'A8': '5789',
+                          'C3': '1', 'G5': '478', 'H6': '3', 'F9': '345', 'E4': '459', 'G1': '134', 'I9': '2467',
+                          'I1': '46', 'B9': '1', 'A6': '147', 'F7': '2', 'D2': '345', 'B6': '5', 'D3': '8', 'A5': '2',
+                          'E2': '123459', 'C4': '8', 'D1': '345', 'E1': '7', 'D5': '3456', 'E6': '4', 'D6': '2'}
+
+    only_choice_expected1 = {'I4': '4', 'H1': '8', 'F2': '13459', 'H4': '2', 'E3': '49', 'D4': '1', 'G6': '9', 'F3': '6',
+                          'C9': '2357', 'F8': '1345', 'C7': '4', 'C8': '23579', 'H9': '9', 'E7': '1', 'G8': '1478',
+                          'B4': '3', 'D9': '34567', 'G2': '1347', 'H5': '457', 'C1': '25', 'G7': '5', 'D8': '34567',
+                          'A7': '6', 'D7': '9', 'B5': '47', 'G9': '47', 'C6': '6', 'A9': '57', 'B8': '278', 'F4': '7',
+                          'I5': '1', 'B2': '24678', 'H7': '17', 'A2': '4578', 'H3': '47', 'F5': '3459', 'B3': '47',
+                          'B1': '9', 'H2': '1467', 'E8': '13456', 'B7': '78', 'I3': '5', 'A3': '3', 'I6': '47',
+                          'A1': '45', 'F6': '8', 'G3': '2', 'F1': '1345', 'G4': '6', 'I7': '3', 'A4': '49', 'C5': '79',
+                          'H8': '1467', 'I2': '4679', 'E9': '8', 'C2': '257', 'E5': '34569', 'I8': '24678',
+                          'A8': '5789',
+                          'C3': '1', 'G5': '478', 'H6': '3', 'F9': '345', 'E4': '459', 'G1': '134', 'I9': '2467',
+                          'I1': '46', 'B9': '1', 'A6': '1', 'F7': '2', 'D2': '345', 'B6': '5', 'D3': '8', 'A5': '2',
+                          'E2': '123459', 'C4': '8', 'D1': '345', 'E1': '7', 'D5': '3456', 'E6': '4', 'D6': '2'}
+
+    def test_only_choice1(self):
+        display(self.only_choice_input1)
+        actual  = solution.only_choice(self.only_choice_input1)
+        display(actual)
+    # def test_only_choice1(self):
+    #     before = self.create_only_choice(generate_empty_board(),solution.row_units[0],4)
+    #     expected = self.create_only_choice(generate_empty_board(),solution.row_units[0],4)
+    #     expected['A4'] = '4'
+    #     print('before')
+    #     display(before)
+    #     # display(expected)
+    #     actual = solution.only_choice(before)
+    #     print('actual')
+    #     display(actual)
+    #     self.assertEqual(actual,expected)
+    #
+    # def create_only_choice(self, board, unit, value):
+    #     i = 0
+    #     for k in unit:
+    #         i = i + 1
+    #         if i == value:
+    #             continue
+    #         else:
+    #             board[k] = str(i)
+    #     return board
+
+class TestReducePuzzle(unittest.TestCase):
+    before_reduce = {'I6': '4', 'H9': '3', 'I2': '6', 'E8': '1', 'H3': '5', 'H7': '8', 'I7': '1', 'I4': '8',
+                            'H5': '6', 'F9': '7', 'G7': '6', 'G6': '3', 'G5': '2', 'E1': '8', 'G3': '1', 'G2': '8',
+                            'G1': '7', 'I1': '23', 'C8': '5', 'I3': '23', 'E5': '347', 'I5': '5', 'C9': '1', 'G9': '5',
+                            'G8': '4', 'A1': '1', 'A3': '4', 'A2': '237', 'A5': '9', 'A4': '2357', 'A7': '27',
+                            'A6': '257', 'C3': '8', 'C2': '237', 'C1': '23', 'E6': '579', 'C7': '9', 'C6': '6',
+                     'C5': '37', 'C4': '4', 'I9': '9', 'D8': '8', 'I8': '7', 'E4': '6', 'D9': '6', 'H8': '2',
+                     'F6': '125', 'A9': '8', 'G4': '9', 'A8': '6', 'E7': '345', 'E3': '379', 'F1': '6',
+                            'F2': '4', 'F3': '23', 'F4': '1235', 'F5': '8', 'E2': '37', 'F7': '35', 'F8': '9',
+                            'D2': '1', 'H1': '4', 'H6': '17', 'H2': '9', 'H4': '17', 'D3': '2379', 'B4': '27',
+                            'B5': '1', 'B6': '8', 'B7': '27', 'E9': '2', 'B1': '9', 'B2': '5', 'B3': '6', 'D6': '279',
+                            'D7': '34', 'D4': '237', 'D5': '347', 'B8': '3', 'B9': '4', 'D1': '5'}
+
+    solved = {'I6': '4', 'H9': '3', 'I2': '6', 'E8': '1', 'H3': '5', 'H7': '8', 'I7': '1', 'I4': '8', 'H5': '6',
+              'F9': '7', 'G7': '6', 'G6': '3', 'G5': '2', 'E1': '8', 'G3': '1', 'G2': '8', 'G1': '7', 'I1': '2',
+              'C8': '5', 'I3': '3', 'E5': '4', 'I5': '5', 'C9': '1', 'G9': '5', 'G8': '4', 'A1': '1', 'A3': '4',
+              'A2': '7', 'A5': '9', 'A4': '3', 'A7': '2', 'A6': '5', 'C3': '8', 'C2': '2', 'C1': '3', 'E6': '9',
+              'C7': '9', 'C6': '6', 'C5': '7', 'C4': '4', 'I9': '9', 'D8': '8', 'I8': '7', 'E4': '6', 'D9': '6',
+              'H8': '2', 'F6': '1', 'A9': '8', 'G4': '9', 'A8': '6', 'E7': '5', 'E3': '7', 'F1': '6', 'F2': '4',
+              'F3': '2', 'F4': '5', 'F5': '8', 'E2': '3', 'F7': '3', 'F8': '9', 'D2': '1', 'H1': '4', 'H6': '7',
+              'H2': '9', 'H4': '1', 'D3': '9', 'B4': '2', 'B5': '1', 'B6': '8', 'B7': '7', 'E9': '2', 'B1': '9',
+              'B2': '5', 'B3': '6', 'D6': '2', 'D7': '4', 'D4': '7', 'D5': '3', 'B8': '3', 'B9': '4', 'D1': '5'}
+
+
+    # def test_reduce_puzzle1(self):
+    #     display(self.before_reduce)
+    #     # actual = solution.reduce_puzzle(self.before_reduce)
+    #     # display(actual)
+    #     display(self.solved)
+    #     # self.assertEqual(actual, self.solved)
 
 class TestNakedTwins(unittest.TestCase):
     before_naked_twins_1 = {'I6': '4', 'H9': '3', 'I2': '6', 'E8': '1', 'H3': '5', 'H7': '8', 'I7': '1', 'I4': '8',
